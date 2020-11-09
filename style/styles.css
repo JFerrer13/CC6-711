@@ -1,0 +1,198 @@
+/*
+    Hex	    RGB
+    #0057a0 (0, 87, 160)    azul claro
+    #1a1f71	(26,31,113)     azul
+    #ffffff	(255,255,255)   blanco
+    #fdbb0a	(253,187,10)    amarillo
+    #faaa13	(250,170,19)    naranja
+    #75787b	(117,120,123)   gris
+*/
+/* 
+.bg-gris{
+    background-color: #1b232b ;
+}
+
+.bg-naranja{
+    background-color: #faaa13 ;
+}
+
+.bg-amarillo{
+    background-color: #fdbb0a ;
+}
+
+.bg-azul-claro{
+    background-color: #0057a0 ;
+}
+
+.bg-azul{
+    background-color: #1a1f71 ;
+}
+.login{
+    color: #1a1f71;
+} */
+
+.bg-gris {
+  background-color: #1b232b;
+}
+
+.bg-rojo {
+  background-color: #ee1b2e;
+}
+
+.bg-naranja {
+  background-color: #f5811f;
+}
+
+.bg-verde-claro {
+  background-color: #46ac5b;
+}
+
+.bg-verde {
+  background-color: #008356;
+}
+.login {
+  color: #008356;
+}
+
+.login img.logo {
+  width: 35%;
+  position: absolute;
+  bottom: 15px;
+}
+
+.login .btn {
+  width: 100%;
+  border-radius: 40px;
+}
+.login .bkg-1 {
+  height: 100vh;
+  background: rgb(245, 129, 31);
+  background: linear-gradient(
+    315deg,
+    rgba(245, 129, 31, 1) 0%,
+    rgba(238, 27, 46, 1) 49%,
+    rgba(70, 172, 91, 1) 49%,
+    rgba(0, 131, 86, 1) 100%
+  );
+}
+
+body.main {
+  background-color: #eee;
+}
+body.main img.logo {
+  width: 100%;
+}
+
+body.main .navbar-brand {
+  width: 90px;
+}
+
+body.main .header {
+  background: rgb(245, 129, 31);
+  background: linear-gradient(
+    315deg,
+    rgba(245, 129, 31, 1) 0%,
+    rgba(238, 27, 46, 1) 49%,
+    rgba(70, 172, 91, 1) 49%,
+    rgba(0, 131, 86, 1) 100%
+  );
+  padding: 35px 20px;
+  color: white;
+}
+
+body.main .profile .avatar {
+  color: #ee1c2e;
+  background-color: #eeeeee;
+  padding: 10px 20px;
+  border-radius: 500px;
+  top: 0px;
+  font-size: 1.4em;
+  font-weight: bold;
+  margin-top: 32px;
+}
+
+body.main .avatar {
+  color: white;
+  padding: 20px 25px;
+  border-radius: 500px;
+  top: 0px;
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+body.main .profile p {
+  margin: 0;
+}
+
+body.main .profile {
+  background: rgb(70, 172, 91);
+  background: linear-gradient(
+    315deg,
+    rgba(70, 172, 91, 1) 49%,
+    rgba(0, 131, 86, 1) 100%
+  );
+  color: white;
+  padding: 15px;
+  z-index: 999;
+}
+
+body.main .navbar {
+  padding: 0;
+  padding-left: 16px;
+}
+
+div.canvas {
+  background-image: url(../img/Tarjeta.jpg);
+  background-size: cover;
+  color: white;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+div.canvas h3 {
+  margin-left: 2em;
+}
+
+div.canvas h4 {
+  margin-left: 4em;
+}
+
+div.notificaciones {
+  position: fixed;
+  z-index: 9999;
+  width: 100vw;
+  padding-top: 15px;
+  display: none;
+  left: 0px;
+}
+div.table {
+  overflow-x: scroll;
+  margin-top: 20px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+div.table thead tr {
+  background: rgb(70, 172, 91);
+  background: linear-gradient( 315deg, rgba(70, 172, 91, 1) 49%, rgba(0, 131, 86, 1) 100% );
+  color: white;
+}
+div.table tbody tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+div.table tbody tr:nth-child(odd) {
+  background-color: #fefefe;
+}
+label.field-Title {
+  font-weight: bold;
+  margin: 0px;
+}
+
+.bkg-grad-verde{
+  background: rgb(70, 172, 91);
+  background: linear-gradient( 315deg, rgba(70, 172, 91, 1) 49%, rgba(0, 131, 86, 1) 100% );
+}
+
+.bkg-grad-naranja{
+  background: rgb(245,129,31);
+background: linear-gradient(315deg, rgba(245,129,31,1) 49%, rgba(238,27,46,1) 100%);
+}

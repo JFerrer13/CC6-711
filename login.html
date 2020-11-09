@@ -1,0 +1,53 @@
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+
+  <title>7Eleven - Asistente logístico</title>
+  <meta name="description" content="7 Eleven">
+  <meta name="description" content="Admin data center">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="style/styles.css?v=1.0">
+
+</head>
+
+<body class="login" id="v-login">
+  <div class="container-fluid">
+        <div class="row">
+            <div class="col-7 px-0">
+                <div class="bkg-1">
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="text-center mt-5">Welcome</h1>
+                        <p class="text-center">Please log in to continue</p>
+                    </div>
+                    <div class="col-6 offset-3">
+                        <hr>
+                        <input type="text" name="User" class="form-control mt-3" placeholder="User" />
+                        <input type="password" name="Password" class="form-control mt-3" placeholder="Password" />
+                        <hr>
+                    </div>
+                    <div class="col-4 offset-4  mt-1">
+                        <button type="button" class="btn btn-primary" onclick="login()">Login</button>
+                    </div>
+                </div>
+                <img class="logo" src="img/logo-7-eleven-horz.png" alt="visa">
+            </div>
+        </div>
+  </div>
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="script/Vue.js"></script>
+  <script src="script/jquery.js"></script>
+  <script type="text/javascript">
+    function login(){
+        window.open("index.html");
+    }
+  </script>
+</body>
+</html>

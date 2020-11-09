@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Visa/.vs/Visa/v15/Server/sqlite3
+*.suo
+/Visa/Visa/Properties/PublishProfiles
+/Visa/.vs/Visa
+/.vs
+/Visa/Visa/obj/Debug
