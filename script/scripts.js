@@ -134,7 +134,11 @@ var app = new Vue({
   methods: {
     //Funciones Aleatorias, sin agrupación lógica
     cerrarSesion: function () {
-      window.open("login.html", "self");
+      document.cookie = "Email=;"
+      document.cookie = "Nombre=;"
+      document.cookie = "Tipo=;"
+      
+      window.open("login.html", "_self");
     },
     mostrarFormularioCear() {
       this.fCrear = "1";
@@ -476,4 +480,21 @@ var app = new Vue({
     }
   },
   updated() { },
+  // beforeCreate() {
+  //   if(document.cookie){
+  //     aux = document.cookie
+  //       .match(/(^|(?<=, ))[^=;,]+=[^;]+/g)
+  //       .map(cookie => cookie.split('=').map(v => v.trim()))
+  //       .filter(v => v[0].length && v[1].length)
+  //       .reduce((builder, cur) => {
+  //         builder[cur[0]] = cur[1]
+  //         return builder
+  //       }, {})
+
+  //     this.Usuario =  aux
+  //   }
+  //   else{
+  //     window.open("login.html", "_self");
+  //   }
+  // },
 });

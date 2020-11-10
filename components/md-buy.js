@@ -5,6 +5,7 @@ Vue.component('md-buy', {
         dataset: [],
         selected: '',
         quantity: 0,
+        updOrders: false,
       }
     },
     template: `
@@ -55,6 +56,8 @@ Vue.component('md-buy', {
                     </div>
                 </div>
             </div>
+            <hr />
+            <md-orders :producto="producto" :usr="usr" :upd="updOrders"></md-orders>
         </div>
     `,
     methods: {
@@ -82,7 +85,7 @@ Vue.component('md-buy', {
                 .catch((err) => {
                     this.msg = "Algo salio mal al generar el combo";
                 });
-            console.log(data)
+
         },
         saveOrder(order){
             let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-manufacturer-orders'
@@ -111,6 +114,8 @@ Vue.component('md-buy', {
                         if(response.data.msg){
                             if(response.data.msg == 1){
                                 alert('The order have been saved successfully.')
+                                this.updOrders = !this.updOrders
+                                this.$emit("updOrders", '')
                             }else{
                                 alert('An error occurred, check your data, we could not save this order.')
                             }

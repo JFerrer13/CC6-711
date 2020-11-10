@@ -6,6 +6,7 @@
   <meta name="description" content="7 Eleven">
   <meta name="description" content="Admin data center">
   <meta name="author" content="SitePoint">
+  <link href="img/7eleven-logo-app-icon.png" rel="shortcut icon" type="image/vnd.microsoft.icon">
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
   <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
@@ -29,13 +30,20 @@
                     </div>
                     <div class="col-6 offset-3">
                         <hr>
-                        <input type="text" name="User" class="form-control mt-3" placeholder="User" />
-                        <input type="password" name="Password" class="form-control mt-3" placeholder="Password" />
+                        <input type="text" name="User" class="form-control mt-3" placeholder="User" id="User"/>
+                        <input type="password" name="Password" class="form-control mt-3" placeholder="Password" id="Password"/>
+                        
+                    </div>
+                    <div class="col-6 offset-3  mb-1" >
                         <hr>
+                        <div class="alert alert-danger" role="alert" id="dv-alerta" style="display: none">
+                            This is a danger alert—check it out!
+                        </div>
                     </div>
                     <div class="col-4 offset-4  mt-1">
                         <button type="button" class="btn btn-primary" onclick="login()">Login</button>
                     </div>
+                    
                 </div>
                 <img class="logo" src="img/logo-7-eleven-horz.png" alt="visa">
             </div>
@@ -44,9 +52,63 @@
   <script src="lib/bootstrap/js/bootstrap.min.js"></script>
   <script src="script/Vue.js"></script>
   <script src="script/jquery.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script type="text/javascript">
     function login(){
-        window.open("index.html");
+        let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/usuarios'
+            
+        let password = document.getElementById("Password").value
+        let user = document.getElementById("User").value
+
+        if(!user){
+            document.getElementById("dv-alerta").innerHTML = "It seens you have not entered your email"
+            document.getElementById("dv-alerta").style.display = "block";
+            return 0
+        }
+
+        if(!password){
+            document.getElementById("dv-alerta").innerHTML = "It seens you have not entered your password"
+            document.getElementById("dv-alerta").style.display = "block";
+            return 0
+        }
+
+        let data = { 
+            "nombres": "",
+            "contraseña": password,
+            "email": "",
+            "tipo": "",
+            "usr": user,
+            "o": "V"
+        }
+        
+        axios
+            .put(url, data)
+            .then((response) => {
+                if (response.data.statusCode == 200) {
+                    if (response.data) {
+                        if(response.data.msg){
+
+                            document.cookie ="Email=" + response.data.msg[0][1] + ";"
+                            document.cookie ="Nombre=" + response.data.msg[0][0] + ";"
+                            document.cookie ="Tipo=" + response.data.msg[0][2]+";"
+
+                            window.open("index.html", "_self");
+
+                        } else {
+                            alert("An error occurred");
+                        }
+                    }
+                }else{
+                    document.getElementById("dv-alerta").innerHTML = response.data.msg
+                    document.getElementById("dv-alerta").style.display = "block";
+                }
+
+                
+            })
+            .catch((err) => {
+                this.msg = "Algo salio mal";
+            });
+        //document.cookie = ''
     }
   </script>
 </body>

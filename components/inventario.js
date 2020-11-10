@@ -68,7 +68,6 @@ Vue.component('inventario', {
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" v-on:click="sell(item)">Sell</a>
                                                 <a class="dropdown-item" v-on:click="buy(item)">Buy</a>
-                                                <a class="dropdown-item" href="#">discard</a>
                                             </div>
                                         </div>
                                     </div>
@@ -89,9 +88,7 @@ Vue.component('inventario', {
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <md-buy :producto="producto" :usr="usr" :option="option"></md-buy>
-                                    <hr />
-                                    <md-orders :producto="producto" :usr="usr"></md-orders>
+                                    <md-buy :producto="producto" :usr="usr" :option="option" @updOrders="obtenerBranchesProducts()"></md-buy>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +125,7 @@ Vue.component('inventario', {
                 "usr": this.usr,
                 "o": "s"
             }
-            console.log(data)
+
             axios
                 .put(url, data)
                 .then((response) => {
