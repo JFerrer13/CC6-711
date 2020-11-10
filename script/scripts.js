@@ -128,6 +128,8 @@ var app = new Vue({
     camposR:"-CREATED_AT-CREATED_BY-UPDATE_AT-UPDATE_BY-",
     nuevoProducto: 0,
     branch_selected: '',
+
+    tmp_producto: [6, 1, 4, "Carne de Toro", "CAR_RES_002", 0, 0, 0, 0, 0, "00/00/0000 0:00:00", "2020-11-09 22:05:17", "09/11/2020 22:05:17", "JavierFerrer@galileo.edu"]
   },
   methods: {
     //Funciones Aleatorias, sin agrupación lógica

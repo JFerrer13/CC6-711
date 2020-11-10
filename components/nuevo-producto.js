@@ -6,6 +6,7 @@ Vue.component('nuevo-producto', {
         return {
             manufacturer_selected: '',
             available_products:[],
+            manufacturer_id: null,
             exit: false,
             upd: false,
         }
@@ -26,7 +27,7 @@ Vue.component('nuevo-producto', {
                             <label class="field-Title">
                             <span>Distribuidor:</span>
                             </label>
-                            <combo-tabla tabla="distributor_manufacturers" campo="3" valor="4" :usr="usr" local="1" @value="manufacturer_selected = $event[0]"></combo-tabla>
+                            <combo-tabla tabla="distributor_manufacturers" campo="3" valor="4" :usr="usr" local="1" @value="manufacturer_selected = $event[0]; manufacturer_id = $event[1].split(' - ')[0]"></combo-tabla>
                         </div>
                         <div class="col-7">
                             <label class="field-Title">
@@ -47,7 +48,7 @@ Vue.component('nuevo-producto', {
                             <div class="col-12"><hr></div>
                             <div clasS="col-1"><strong>#</strong></div>
                             <div clasS="col-4"><strong>Name</strong></div>
-                            <div clasS="col-5"><strong>Description</strong></div>
+                            <div clasS="col-4"><strong>Description</strong></div>
                             <div clasS="col-1"><strong>add</strong></div>
                             <div class="col-12"><hr></div>
                             </div>
@@ -55,16 +56,7 @@ Vue.component('nuevo-producto', {
                                 <div clasS="col-1 text-center" v-text="index + 1"></div>
                                 <div clasS="col-4" v-text="item.name"></div>
                                 <div clasS="col-4" v-text="item.description"></div>
-                                <div clasS="col-2">
-                                    
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1"><i :class="!available_products[index][\'icono\'] ? 'fas fa-box' : available_products[index][\'icono\']"></i></span>
-                                        </div>
-                                        <icon-combo @value="available_products[index][\'icono\'] = $event; upd = !upd"></icon-combo>
-                                    </div>
-                                </div>
-                                <div clasS="col-1"><button class="btn btn-success" v-on:click="agregarProducto(index)"> <i class="fas fa-plus"></i> </button></div>
+                                <div clasS="col-1 text-center"><button class="btn btn-success" v-on:click="agregarProducto(index)"> <i class="fas fa-plus"></i> </button></div>
                             </div>
                         </div>
                         </div>
@@ -99,8 +91,9 @@ Vue.component('nuevo-producto', {
                 "id": "",
                 "distributor_id": String(1),
                 "distributor_branch_id": String(this.branch),
+                "distributor_manufacturer_id": String(this.manufacturer_id),
                 "product_name": prdoucto.name,
-                "product_code": prdoucto.icono + '|' + prdoucto.sku,
+                "product_code": prdoucto.sku,
                 "minimun_stock_quantity": "0",
                 "available_quantity": "0",
                 "unit_price": "0",
