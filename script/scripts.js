@@ -127,10 +127,7 @@ var app = new Vue({
     Clientes:[],
     camposR:"-CREATED_AT-CREATED_BY-UPDATE_AT-UPDATE_BY-",
     nuevoProducto: 0,
-    distributor_selected: '',
-
-    manufacturer_selected: '',
-    available_products: [{"name":"Carne de Res","sku":"CAR_RES_001","description":"Carne de Res"},{"name":"Carne de Toro","sku":"CAR_RES_002","description":"Carne de Toro"},{"name":"Carne de vaca de Coban","sku":"CAR_RES_003","description":"Carne de vaca de Coban"},{"name":"Leche pura de vaca","sku":"LAC_LEC_001","description":"Leche pura de vaca"},{"name":"Crema en vaso 500gr","sku":"LAC_CRE_001","description":"Crema en vaso 500gr"},{"name":"Huevos carton 30","sku":"LAC_HUE_001","description":"Huevos carton 30"},{"name":"Carne de pescado","sku":"CAR_PES_001","description":"Carne de pescado"}],
+    branch_selected: '',
   },
   methods: {
     //Funciones Aleatorias, sin agrupación lógica
@@ -148,8 +145,6 @@ var app = new Vue({
       for(let i = 0; i < auxKeys.length; i++){
         this.objInsert[auxKeys] = ""
       }
-
-      //this.InfoTabla = null;
     },
     //
     getTableInfo: function () {
@@ -333,12 +328,6 @@ var app = new Vue({
       this.opcionActual = "Search";
       this.getTables();
     },
-    //Funciones que realizan inserciones
-    insert: function (){
-      console.log(this.objInsert)
-    },
-    //Fuciones que realizan eliminación/inactivación
-
     //Usuarios
     obtenerUsuarios: function (){
       let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/usuarios'
@@ -465,6 +454,7 @@ var app = new Vue({
       
       return aux 
     },
+
   },
   mounted() {
     let aDataset = []

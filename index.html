@@ -110,7 +110,7 @@
                       placeholder="Product, dsitributor or order "
                       v-model="aBuscar"
                     />
-                    <combo-tabla tabla="distributor_branches" campo="2" valor="0" :usr="Usuario.Email" local="1" @value="distributor_selected = $event[1].split('-')[0].trim()"></combo-tabla>
+                    <combo-tabla tabla="distributor_branches" campo="2" valor="0" :usr="Usuario.Email" local="1" @value="branch_selected = $event[1].split('-')[0].trim()"></combo-tabla>
                     <div class="input-group-prepend">
                       <button
                         class="btn btn-success"
@@ -123,53 +123,22 @@
                   </div>
                 </div>
               </div>
-              <div class="row justify-content-center">
-                <div class="col-2">
-                  <button  class="btn btn-outline-light mt-2" v-on:click="nuevoProducto=1" > <i class="fas fa-plus"></i> new product</button>
+              <div class="row">
+                <div class="col-5">
+                  <button  class="btn btn-outline-light mt-2" style="visibility: hidden" > <i class="fas fa-plus"></i> new product</button>
+                </div>
+                <div class="col-2 text-center">
+                  <button  class="btn btn-outline-light mt-2" v-if="branch_selected" v-on:click="nuevoProducto=1" > <i class="fas fa-plus"></i> new product</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="row" v-if="nuevoProducto">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="row justify-content-center">
-                  <div class="col-12">
-                    <h3>Nuevo producto</h3>
-                  </div>
-                  <div class="col-12">
-                    <hr />
-                  </div>
-                  <div class="col-5">
-                    <label class="field-Title">
-                      <span>Distribuidor:</span>
-                    </label>
-                    <combo-tabla tabla="distributor_manufacturers" campo="3" valor="4" :usr="Usuario.Email" local="1" @value="manufacturer_selected = $event[0]"></combo-tabla>
-                  </div>
-                  <div class="col-7">
-                    <label class="field-Title">
-                      <span>url:</span>
-                    </label>
-                    <input type="text" class="form-control" :value="manufacturer_selected" disabled>
-                  </div>
-                  <div class="col-5 text-center">
-                    <button type="button" class="btn btn-success mt-3"><i class="fas fa-file-download"></i> get products</button>
-                  </div>
-                  <div class="col-12">
-                    <hr />
-                    <h5>List of products</h5>
-                  </div>
-                  <div class="col-12">
-                    <div class="row" v-for="item-index in available_products">
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <nuevo-producto @cancelar="nuevoProducto = 0" :branch="branch_selected" :usr="Usuario.Email"></nuevo-producto>
+        </div>
+        <div class="row" v-else>
+            <inventario :usr="Usuario.Email" :search="aBuscar" :branch="branch_selected" ></inventario>
         </div>
       </section>
       <!-- Mantenimientos -->
@@ -506,8 +475,12 @@
     <script src="script/jquery.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.2.1/pnotify.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Componentes -->
     <script src="components/combo-tabla.js"></script>
+    <script src="components/nuevo-producto.js"></script>
+    <script src="components/icon-combo.js"></script>
+    <script src="components/inventario.js"></script>
     <!-- El script -->
     <script src="script/scripts.js"></script>
   </body>

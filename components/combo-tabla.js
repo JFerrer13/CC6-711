@@ -70,7 +70,6 @@ Vue.component('combo-tabla', {
     watch: {
         selected: {
             handler: function() {
-                console.log(this.selected)
               this.$emit('value', [this.dataset[this.selected][this.valor], this.dataset[this.selected][0] + ' - ' + this.dataset[this.selected][this.campo]]);
           },
             deep: true
