@@ -67,12 +67,12 @@
             <li
               :class="'nav-item ' + ( opcionActual == 'NuevoUsuario' ? 'active' : '')"
             >
-              <a class="nav-link" href="#" @click="nuevoUsuario()">Users</a>
+              <a class="nav-link" v-if="Usuario.Puesto = 'DBA'" href="#" @click="nuevoUsuario()">Users</a>
             </li>
             <li
               :class="'nav-item ' + ( opcionActual == 'Tables' ? 'active' : '')"
             >
-              <a class="nav-link" href="#" @click="goToTables()">Tables</a>
+              <a class="nav-link" v-if="Usuario.Puesto = 'DBA'" href="#" @click="goToTables()">Tables</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#" @click="cerrarSesion()">Logout</a>
@@ -544,6 +544,7 @@
     <script src="components/inventario.js"></script>
     <script src="components/md-buy.js"></script>
     <script src="components/md-orders.js"></script>
+    <script src="components/md-sales.js"></script>
     <!-- El script -->
     <script src="script/scripts.js"></script>
   </body>

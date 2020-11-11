@@ -82,7 +82,7 @@ Vue.component('inventario', {
                     <div tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" class="modal fade show" style="position:absolute; height:auto; padding-right: 17px; display: block;" aria-modal="true">
                         <div role="document" class="modal-dialog modal-lg">
                             <div class="modal-content">
-                                <div class="modal-header">
+                                <div :class="'modal-header '  + ( option=='Buy' ? 'bkg-grad-naranja' : 'bkg-grad-verde')">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" v-on:click="closeMd()">
                                         <span>&times;</span>
                                     </button>

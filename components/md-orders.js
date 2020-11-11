@@ -44,7 +44,7 @@ Vue.component('md-orders', {
                             <button type="button" class="btn btn-light dropdown-toggle" :id="'dropdownMenuButton' + index" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v"></i>
                             </button>
-                            <div class="dropdown-menu">
+                            <div class="dropdown-menu" v-if="item[7] == 'PENDING'">
                                 <a class="dropdown-item" v-on:click="Confirm(item)">Confirm</a>
                                 <a class="dropdown-item" v-on:click="Reject(item)">Reject</a>
                             </div>

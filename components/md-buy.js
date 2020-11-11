@@ -6,18 +6,19 @@ Vue.component('md-buy', {
         selected: '',
         quantity: 0,
         updOrders: false,
+        updSales: false,
       }
     },
     template: `
-        <div name="combo-tabla">
-            <div class="row justify-content-center">
+        <div name="md-buy">
+            <div class="row justify-content-center" v-if="option == 'Buy'">
                 <div class="col-12">
                     <h3 v-if="">Buy new product</h3>
                     <hr>
                     <div class="alert alert-secondary" role="alert">
                     <div class="row">
                         <div class="col-12">
-                        <p>Make a nwe order for the next product:</p>
+                        <p>Make a new order for the next product:</p>
                         <hr>  
                         </div>
                     </div>
@@ -56,8 +57,58 @@ Vue.component('md-buy', {
                     </div>
                 </div>
             </div>
+            <div class="row justify-content-center" v-else>
+                <div class="col-12">
+                    <h3 v-if="">Sell this product</h3>
+                    <hr>
+                    <div class="alert alert-secondary" role="alert">
+                    <div class="row">
+                        <div class="col-12">
+                        <p>Make a new sale of this product:</p>
+                        <hr>  
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                        <label>Branch</label>
+                        <input type="text" class="form-control" :value="producto[2]" disabled>
+                        </div>
+                        <div class="col-6">
+                        <label>Provider</label>
+                        <input type="text" class="form-control" :value="producto[3]" disabled>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                        <label>Product</label>
+                        <input type="text" class="form-control" :value="producto[4]" disabled>
+                        </div>
+                        <div class="col-6">
+                        <label>Code</label>
+                        <input type="text" class="form-control" :value="producto[5]" disabled>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <p class="mt-1">Chose the amaunt of product to sell: </p>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" class="form-control" maxlength="3" max="100" min="0" :value="producto[7]" disabled>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" class="form-control" maxlength="3" max="100" min="0" v-model="quantity">
+                        </div>
+                        <div class="col-2">
+                            <button type="number" class="btn btn-success" v-on:click="generateSell()"> <i class="fas fa-share-square"></i> Sell
+                            </button> 
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
             <hr />
-            <md-orders :producto="producto" :usr="usr" :upd="updOrders"></md-orders>
+            <md-orders :producto="producto" :usr="usr" :upd="updOrders" v-if="option == 'Buy'"></md-orders>
+            <md-sales :producto="producto" :usr="usr" :upd="updSales" v-if="option != 'Buy'"></md-sales>
         </div>
     `,
     methods: {
@@ -122,6 +173,86 @@ Vue.component('md-buy', {
                         }
                     } else {
                         alert("algo salio mal agregar producto");
+                    }
+                })
+                .catch((err) => {
+                    this.msg = "Algo salio mal";
+                });
+
+        },
+        convertDecStr(n){
+            n = String(n)
+            return n.length - n.indexOf('.') > 2 ? n.substring(0, n.indexOf('.') + 3) : n
+        },
+        generateSell (){
+            let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-branch-dally-sales'
+            
+            if(this.quantity > this.producto[7]){
+                alert('There are not enough product available to realize this operation.')
+                return 0
+            }
+
+            let data = {
+                id: "null",
+                distributor_id: "1",
+                distributor_branch_id: String(this.producto[2]),
+                product_code: String(this.producto[5]),
+                quantity_sale: String(this.quantity),
+                total_sale: this.convertDecStr(this.quantity * this.producto[8]),
+                usr: "JavierFerrer@galileo.edu",
+                o: "c",
+            }
+
+            axios
+                .put(url, data)
+                .then((response) => {
+                    if (response.data) {
+                        if(response.data.msg){
+                            if(response.data.msg == 1){
+                                this.updateBranchProduct()
+                            }else{
+                                alert('An error occurred, check your data, we could not save this order.')
+                            }
+                        }
+                    } else {
+                        alert("algo salio mal agregar producto");
+                    }
+                })
+                .catch((err) => {
+                    this.msg = "Algo salio mal";
+                });
+        },
+        updateBranchProduct(){
+            let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-branch-products'
+
+            let data = {
+                "id": this.convertDecStr(this.producto[0]),
+                "distributor_id": this.convertDecStr(this.producto[1]),
+                "distributor_branch_id": this.convertDecStr(this.producto[2]),
+                "distributor_manufacturer_id": this.convertDecStr(this.producto[3]),
+                "product_name": this.producto[4],
+                "product_code": this.producto[5],
+                "minimun_stock_quantity": this.convertDecStr(this.producto[6]),
+                "available_quantity": this.convertDecStr(this.producto[7] - this.quantity),
+                "unit_price": this.convertDecStr(this.producto[8]),
+                "wholesale_price": this.convertDecStr(this.producto[9]),
+                "wholesale_quantity_required": this.convertDecStr(this.producto[10]),
+                "usr": this.usr,
+                "o": "u"
+            }
+
+            axios
+                .put(url, data)
+                .then((response) => {
+                    if (response.data) {
+                        if(response.data.msg){
+                            alert("The sale have been registered successfully");
+                            this.updSales = !this.updSales
+                            this.$emit("updSales", '')
+                            this.obtenerBranchesProducts ()
+                        }
+                    } else {
+                        alert("An error occurred");
                     }
                 })
                 .catch((err) => {
