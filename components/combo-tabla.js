@@ -73,6 +73,12 @@ Vue.component('combo-tabla', {
               this.$emit('value', [this.dataset[this.selected][this.valor], this.dataset[this.selected][0] + ' - ' + this.dataset[this.selected][this.campo]]);
           },
             deep: true
+        },
+        usr: {
+            handler: function() {
+                this.getGeneralS() 
+            },
+            deep: true
         }
       }
   })

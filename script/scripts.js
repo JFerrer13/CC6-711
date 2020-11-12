@@ -97,9 +97,9 @@ var app = new Vue({
 
     aBuscar: "",
     Usuario: {
-      Email: "JavierFerrer@galileo.edu",
-      Nombre: "Javier Ferrer",
-      Puesto: "DBA",
+      Email: "",
+      Nombre: "",
+      Puesto: "",
     },
     Usuarios: [],
     msgUsuario: null,
@@ -136,8 +136,8 @@ var app = new Vue({
     cerrarSesion: function () {
       document.cookie = "Email=;"
       document.cookie = "Nombre=;"
-      document.cookie = "Tipo=;"
-      
+      document.cookie = "Puesto=;"
+
       window.open("login.html", "_self");
     },
     mostrarFormularioCear() {
@@ -478,23 +478,27 @@ var app = new Vue({
 
       this.dataset = aDataset;
     }
+    document.cookie.split(/\s*;\s*/).forEach( pair => {
+      pair = pair.split(/\s*=\s*/)
+      this.Usuario[pair[0]] = pair.splice(1).join('=')
+    })
   },
   updated() { },
-  // beforeCreate() {
-  //   if(document.cookie){
-  //     aux = document.cookie
-  //       .match(/(^|(?<=, ))[^=;,]+=[^;]+/g)
-  //       .map(cookie => cookie.split('=').map(v => v.trim()))
-  //       .filter(v => v[0].length && v[1].length)
-  //       .reduce((builder, cur) => {
-  //         builder[cur[0]] = cur[1]
-  //         return builder
-  //       }, {})
+  beforeCreate() {
+    if(document.cookie){
+      let aux = {}
+        
+      document.cookie.split(/\s*;\s*/).forEach(function(pair) {
+        pair = pair.split(/\s*=\s*/)
+        aux[pair[0]] = pair.splice(1).join('=')
+      })
 
-  //     this.Usuario =  aux
-  //   }
-  //   else{
-  //     window.open("login.html", "_self");
-  //   }
-  // },
+      if(!aux.Email){
+        window.open("login.html", "_self");
+      }
+    }
+    else{
+      window.open("login.html", "_self");
+    }
+  },
 });

@@ -188,7 +188,7 @@ Vue.component('md-buy', {
             let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-branch-dally-sales'
             
             if(this.quantity > this.producto[7]){
-                alert('There are not enough product available to realize this operation.')
+                alert('There are not enough product available to execute this operation.')
                 return 0
             }
 
@@ -275,6 +275,13 @@ Vue.component('md-buy', {
             handler: function() {
               this.$emit('value', true);
           },
+            deep: true
+        },
+        usr: {
+            handler: function() {
+                this.updOrders = !this.updOrders
+                this.updSales = !this.updSales 
+            },
             deep: true
         }
       }

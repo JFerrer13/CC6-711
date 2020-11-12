@@ -139,6 +139,12 @@ Vue.component('nuevo-producto', {
                 this.$emit('cancelar', 'cerrar');
             },
             deep: true
+        },
+        usr: {
+            handler: function() {
+                this.obtenerProductos() 
+            },
+            deep: true
         }
       }
   })

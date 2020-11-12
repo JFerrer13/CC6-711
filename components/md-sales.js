@@ -85,6 +85,12 @@ Vue.component('md-sales', {
                 this.obtenerSales()
             },
             deep: true
+        },
+        usr: {
+            handler: function() {
+                this.obtenerSales() 
+            },
+            deep: true
         }
       }
   })

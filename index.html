@@ -67,12 +67,12 @@
             <li
               :class="'nav-item ' + ( opcionActual == 'NuevoUsuario' ? 'active' : '')"
             >
-              <a class="nav-link" v-if="Usuario.Puesto = 'DBA'" href="#" @click="nuevoUsuario()">Users</a>
+              <a class="nav-link" v-if="Usuario.Puesto == 'DBA'" href="#" @click="nuevoUsuario()">Users</a>
             </li>
             <li
               :class="'nav-item ' + ( opcionActual == 'Tables' ? 'active' : '')"
             >
-              <a class="nav-link" v-if="Usuario.Puesto = 'DBA'" href="#" @click="goToTables()">Tables</a>
+              <a class="nav-link" v-if="Usuario.Puesto == 'DBA'" href="#" @click="goToTables()">Tables</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#" @click="cerrarSesion()">Logout</a>

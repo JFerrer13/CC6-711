@@ -182,6 +182,12 @@ Vue.component('inventario', {
                 this.$emit('cancelar', 'cerrar');
             },
             deep: true
+        },
+        usr: {
+            handler: function() {
+                this.obtenerBranchesProducts() 
+            },
+            deep: true
         }
       }
   })

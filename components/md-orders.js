@@ -233,6 +233,12 @@ Vue.component('md-orders', {
                 this.obtenerBranchesProducts()
             },
             deep: true
+        },
+        usr: {
+            handler: function() {
+                this.obtenerBranchesProducts() 
+            },
+            deep: true
         }
       }
   })
