@@ -128,7 +128,8 @@ var app = new Vue({
     camposR:"-CREATED_AT-CREATED_BY-UPDATE_AT-UPDATE_BY-",
     nuevoProducto: 0,
     branch_selected: '',
-    tmp_producto:[]
+    tmp_producto:[],
+    vListo: false,
   },
   methods: {
     //Funciones Aleatorias, sin agrupación lógica
@@ -481,11 +482,14 @@ var app = new Vue({
       pair = pair.split(/\s*=\s*/)
       this.Usuario[pair[0]] = pair.splice(1).join('=')
     })
+
     this.Usuario = {
       Email: "JavierFerrer@galileo.edu",
       Nombre: "Javier Ferrer",
       Puesto: "DBA",
     }
+
+    this.vListo = true;
   },
   updated() { },
   beforeCreate() {

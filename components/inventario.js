@@ -100,7 +100,7 @@ Vue.component('inventario', {
     methods: {
         obtenerBranches () {
             let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-branches'
-
+            console.log("Va nulo! D:",this)
             let data = { 
                 "usr": this.usr,
                 "o": "s"

@@ -91,381 +91,298 @@
           </div>
         </div>
       </nav>
-      <!-- Buscar -->
-      <section v-if="opcionActual == 'Search'">
-        <div class="row">
-          <div class="col-12">
-            <div class="header">
-              <h1 class="text-center">Search</h1>
-              <p class="text-center">
-                You can search by product, distributor or order
-              </p>
-              <div class="row">
-                <div class="col-8 offset-2">
-                  <div class="input-group mt-3">
-                    <input
-                      type="text"
-                      name="Usuario"
-                      class="form-control input-sm"
-                      placeholder="Product, dsitributor or order "
-                      v-model="aBuscar"
-                    />
-                    <combo-tabla tabla="distributor_branches" campo="2" valor="0" :usr="Usuario.Email" local="1" @value="branch_selected = $event[1].split('-')[0].trim()"></combo-tabla>
-                    <div class="input-group-prepend">
-                      <button
-                        class="btn btn-success"
-                        style="width: 100%"
-                        @click="buscar()"
-                      >
-                        <i class="fas fa-search"></i>
-                      </button>
+      <div v-if="vListo">
+        <!-- Buscar -->
+        <section v-if="opcionActual == 'Search'">
+          <div class="row">
+            <div class="col-12">
+              <div class="header">
+                <h1 class="text-center">Search</h1>
+                <p class="text-center">
+                  You can search by product, distributor or order
+                </p>
+                <div class="row">
+                  <div class="col-8 offset-2">
+                    <div class="input-group mt-3">
+                      <input
+                        type="text"
+                        name="Usuario"
+                        class="form-control input-sm"
+                        placeholder="Product, dsitributor or order "
+                        v-model="aBuscar"
+                      />
+                      <combo-tabla tabla="distributor_branches" campo="2" valor="0" :usr="Usuario.Email" local="1" @value="branch_selected = $event[1].split('-')[0].trim()"></combo-tabla>
+                      <div class="input-group-prepend">
+                        <button
+                          class="btn btn-success"
+                          style="width: 100%"
+                          @click="buscar()"
+                        >
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-5">
-                  <button  class="btn btn-outline-light mt-2" style="visibility: hidden" > <i class="fas fa-plus"></i> new product</button>
-                </div>
-                <div class="col-2 text-center">
-                  <button  class="btn btn-outline-light mt-2" v-if="branch_selected" v-on:click="nuevoProducto=1" > <i class="fas fa-plus"></i> new product</button>
+                <div class="row">
+                  <div class="col-5">
+                    <button  class="btn btn-outline-light mt-2" style="visibility: hidden" > <i class="fas fa-plus"></i> new product</button>
+                  </div>
+                  <div class="col-2 text-center">
+                    <button  class="btn btn-outline-light mt-2" v-if="branch_selected" v-on:click="nuevoProducto=1" > <i class="fas fa-plus"></i> new product</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="row" v-if="nuevoProducto">
-          <nuevo-producto @cancelar="nuevoProducto = 0" :branch="branch_selected" :usr="Usuario.Email"></nuevo-producto>
-        </div>
-        <div class="row" v-else>
-          <inventario :usr="Usuario.Email" :search="aBuscar" :branch="branch_selected" ></inventario>
-        </div>
-      </section>
-      <!-- Mantenimientos -->
-      <section v-if="opcionActual == 'Tables'">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="col-12">
-                  <div class="row">
-                    <div class="col-12 col-md-6">
-                      <h2>Tables</h2>
-                      <p class="text-muted">Choos a table to work on</p>
-                    </div>
-                    <div class="col-12 col-md-6">
-                      <label>Tables available to query and modify <span class="text-muted" v-text="'(' + Tablas.length  + ')'"></span></label>
-                      <div class="input-group">
-                        <select
-                          class="custom-select"
-                          name="tables"
-                          v-on:change="getTableInfo()"
-                          v-model="Tabla"
-                        >
-                          <option value="-1">Selecciona una tabla</option>
-                          <option
-                            v-for="item in Tablas"
-                            :value="item"
-                            v-text="item"
-                          ></option>
-                        </select>
-                        <div class="input-group-append">
-                          <button
-                            class="btn btn-outline-success"
-                            type="button"
-                            v-on:click="mostrarFormularioCear()"
-                          >
-                            <i class="fa fa-plus"></i>
-                          </button>
-                        </div>
+          <div class="row" v-if="nuevoProducto">
+            <nuevo-producto @cancelar="nuevoProducto = 0" :branch="branch_selected" :usr="Usuario.Email"></nuevo-producto>
+          </div>
+          <div class="row" v-else>
+            <inventario :usr="Usuario.Email" :search="aBuscar" :branch="branch_selected" ></inventario>
+          </div>
+        </section>
+        <!-- Mantenimientos -->
+        <section v-if="opcionActual == 'Tables'">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="col-12">
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <h2>Tables</h2>
+                        <p class="text-muted">Choos a table to work on</p>
                       </div>
-                    </div>
-                    <div class="col-12" v-if="fCrear">
-                      <div class="row justify-content-center">
-                        <div class="col-12">
-                          <hr />
-                        </div>
-                        <div class="col-12">
-                          <div class="alert alert-secondary mb-5" role="alert">
-                            <p>
-                              <strong>Caption: </strong>
-                              <span class="text-danger"><i class="fas fa-asterisk"></i></span>Required field,
-                              <span class="text-warning"><i class="fas fa-key"></i></span>Primary key,
-                              <span class="text-warning"><i class="fas fa-external-link-square-alt"></i></span>Foreign key
-                            </p>
+                      <div class="col-12 col-md-6">
+                        <label>Tables available to query and modify <span class="text-muted" v-text="'(' + Tablas.length  + ')'"></span></label>
+                        <div class="input-group">
+                          <select
+                            class="custom-select"
+                            name="tables"
+                            v-on:change="getTableInfo()"
+                            v-model="Tabla"
+                          >
+                            <option value="-1">Selecciona una tabla</option>
+                            <option
+                              v-for="item in Tablas"
+                              :value="item"
+                              v-text="item"
+                            ></option>
+                          </select>
+                          <div class="input-group-append">
+                            <button
+                              class="btn btn-outline-success"
+                              type="button"
+                              v-on:click="mostrarFormularioCear()"
+                            >
+                              <i class="fa fa-plus"></i>
+                            </button>
                           </div>
                         </div>
-                        <div
-                          class="col-6 mb-2 mb-5"
-                          v-for="(item,index) in camposFiltrados"
-                        >
-                          <label class="field-Title">
-                            <span v-text="item.Name"></span>
-                            <span class="text-muted">
-                              <span
-                                v-if="item.maxlength"
-                                v-text="'(' + item.maxlength + ')'"
-                              >
+                      </div>
+                      <div class="col-12" v-if="fCrear">
+                        <div class="row justify-content-center">
+                          <div class="col-12">
+                            <hr />
+                          </div>
+                          <div class="col-12">
+                            <div class="alert alert-secondary mb-5" role="alert">
+                              <p>
+                                <strong>Caption: </strong>
+                                <span class="text-danger"><i class="fas fa-asterisk"></i></span>Required field,
+                                <span class="text-warning"><i class="fas fa-key"></i></span>Primary key,
+                                <span class="text-warning"><i class="fas fa-external-link-square-alt"></i></span>Foreign key
+                              </p>
+                            </div>
+                          </div>
+                          <div
+                            class="col-6 mb-2 mb-5"
+                            v-for="(item,index) in camposFiltrados"
+                          >
+                            <label class="field-Title">
+                              <span v-text="item.Name"></span>
+                              <span class="text-muted">
+                                <span
+                                  v-if="item.maxlength"
+                                  v-text="'(' + item.maxlength + ')'"
+                                >
+                                </span>
                               </span>
-                            </span>
-                            <span v-if="item.notnull" class="text-danger"
-                              ><i class="fas fa-asterisk"></i
-                            ></span>
-                            <span v-if="item.key == 'PRI'" class="text-warning"
-                              ><i class="fas fa-key"></i
-                            ></span>
-                            <span v-if="item.key == 'MUL'" class="text-warning"
-                              ><i class="fas fa-external-link-square-alt"></i
-                            ></span>
-                          </label>
-                          <div v-if="item.key != 'MUL'">
-                            <input
-                              type="text"
-                              class="form-control"
-                              :placeholder="item.Name"
-                              v-if="item.Type == 'char'"
-                              :maxlength="item.maxlength"
-                              v-model="objInsert[item.Name]"
-                            />
-                            <input
-                              type="number"
-                              class="form-control"
-                              :placeholder="item.Name"
-                              v-if="item.Type == 'int'"
-                              :maxlength="item.maxlength"
-                              :disabled="item.Name == 'ID' ? true : false"
-                              v-model="objInsert[item.Name]"
-                            />
-                            <input
-                              type="number"
-                              class="form-control"
-                              placeholder="Timestamp"
-                              v-if="item.Type == 'timestamp'"
-                              :maxlength="item.maxlength"
-                              disabled="true"
-                            />
-                            <div class="row" v-if="item.Type == 'float'">
-                              <div class="col-12">
-                                <div class="input-group mb-3">
-                                  <div class="input-group-prepend">
-                                    <span
-                                      class="input-group-text"
-                                      id="basic-addon1"
-                                      >Q.</span
-                                    >
+                              <span v-if="item.notnull" class="text-danger"
+                                ><i class="fas fa-asterisk"></i
+                              ></span>
+                              <span v-if="item.key == 'PRI'" class="text-warning"
+                                ><i class="fas fa-key"></i
+                              ></span>
+                              <span v-if="item.key == 'MUL'" class="text-warning"
+                                ><i class="fas fa-external-link-square-alt"></i
+                              ></span>
+                            </label>
+                            <div v-if="item.key != 'MUL'">
+                              <input
+                                type="text"
+                                class="form-control"
+                                :placeholder="item.Name"
+                                v-if="item.Type == 'char'"
+                                :maxlength="item.maxlength"
+                                v-model="objInsert[item.Name]"
+                              />
+                              <input
+                                type="number"
+                                class="form-control"
+                                :placeholder="item.Name"
+                                v-if="item.Type == 'int'"
+                                :maxlength="item.maxlength"
+                                :disabled="item.Name == 'ID' ? true : false"
+                                v-model="objInsert[item.Name]"
+                              />
+                              <input
+                                type="number"
+                                class="form-control"
+                                placeholder="Timestamp"
+                                v-if="item.Type == 'timestamp'"
+                                :maxlength="item.maxlength"
+                                disabled="true"
+                              />
+                              <div class="row" v-if="item.Type == 'float'">
+                                <div class="col-12">
+                                  <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                      <span
+                                        class="input-group-text"
+                                        id="basic-addon1"
+                                        >Q.</span
+                                      >
+                                    </div>
+                                    <input
+                                      type="number"
+                                      class="form-control"
+                                      :placeholder="item.Name"
+                                      :maxlength="item.maxlength"
+                                      v-model="objInsert[item.Name]"
+                                    />
                                   </div>
-                                  <input
-                                    type="number"
-                                    class="form-control"
-                                    :placeholder="item.Name"
-                                    :maxlength="item.maxlength"
-                                    v-model="objInsert[item.Name]"
-                                  />
+                                </div>
+                              </div>
+                              <div class="row" v-if="item.Type == 'date'">
+                                <div class="col-4">
+                                  <select class="custom-select">
+                                    <option value="null" disabled selected>
+                                      Día
+                                    </option>
+                                    <option
+                                      v-for="item in 31"
+                                      v-text="item"
+                                    ></option>
+                                  </select>
+                                </div>
+                                <div class="col-4">
+                                  <select class="custom-select">
+                                    <option value="null" disabled selected>
+                                      Mes
+                                    </option>
+                                    <option
+                                      v-for="item in 12"
+                                      v-text="item"
+                                    ></option>
+                                  </select>
+                                </div>
+                                <div class="col-4">
+                                  <select class="custom-select">
+                                    <option value="null" disabled selected>
+                                      Año
+                                    </option>
+                                    <option
+                                      v-for="item in 20"
+                                      v-text="1990 + item"
+                                    ></option>
+                                  </select>
                                 </div>
                               </div>
                             </div>
-                            <div class="row" v-if="item.Type == 'date'">
-                              <div class="col-4">
-                                <select class="custom-select">
-                                  <option value="null" disabled selected>
-                                    Día
-                                  </option>
-                                  <option
-                                    v-for="item in 31"
-                                    v-text="item"
-                                  ></option>
-                                </select>
-                              </div>
-                              <div class="col-4">
-                                <select class="custom-select">
-                                  <option value="null" disabled selected>
-                                    Mes
-                                  </option>
-                                  <option
-                                    v-for="item in 12"
-                                    v-text="item"
-                                  ></option>
-                                </select>
-                              </div>
-                              <div class="col-4">
-                                <select class="custom-select">
-                                  <option value="null" disabled selected>
-                                    Año
-                                  </option>
-                                  <option
-                                    v-for="item in 20"
-                                    v-text="1990 + item"
-                                  ></option>
-                                </select>
-                              </div>
+                            <div v-else>
+                              <combo-tabla v-if="item.Name =='DISTRIBUTOR_ID'" tabla="distributors" campo="2" valor="0" :usr="Usuario.Email" :au="0" local="1" @value="objInsert[item.Name] = $event[0]"></combo-tabla>
+                              <combo-tabla v-if="item.Name =='DISTRIBUTOR_BRANCH_ID'" tabla="distributor_branches" campo="2" valor="0" :usr="Usuario.Email" local="1" @value="objInsert[item.Name] = $event[0]"></combo-tabla>
+                              <combo-tabla v-if="item.Name =='DISTRIBUTOR_MANUFACTURER_ID'" tabla="distributor_manufacturers" campo="3" valor="0" :usr="Usuario.Email" local="1" @value="objInsert[item.Name] = $event[0]"></combo-tabla>
                             </div>
                           </div>
-                          <div v-else>
-                            <combo-tabla v-if="item.Name =='DISTRIBUTOR_ID'" tabla="distributors" campo="2" valor="0" :usr="Usuario.Email" :au="0" local="1" @value="objInsert[item.Name] = $event[0]"></combo-tabla>
-                            <combo-tabla v-if="item.Name =='DISTRIBUTOR_BRANCH_ID'" tabla="distributor_branches" campo="2" valor="0" :usr="Usuario.Email" local="1" @value="objInsert[item.Name] = $event[0]"></combo-tabla>
-                            <combo-tabla v-if="item.Name =='DISTRIBUTOR_MANUFACTURER_ID'" tabla="distributor_manufacturers" campo="3" valor="0" :usr="Usuario.Email" local="1" @value="objInsert[item.Name] = $event[0]"></combo-tabla>
-                          </div>
-                        </div>
-                        <div class="col-12">
-                          <div class="row justify-content-center mt-2">
-                            <div class="col-2 mt-2 text-right">
-                              <button
-                                class="btn btn-outline-success"
-                                type="button"
-                                v-on:click="getGeneralI()"
-                              >
-                                Guardar <i class="fa fa-save"></i>
-                              </button>
-                            </div>
-                            <div class="col-2 mt-2">
-                              <button
-                                class="btn btn-outline-danger"
-                                type="button"
-                                v-on:click="cancelarCrear()"
-                              >
-                                Cancelar <i class="fa fa-times"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-12">
-                          <hr />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-12" v-if="!fCrear && Tabla != -1">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="table">
-                            <table id="repTB">
-                              <thead>
-                                <tr>
-                                  <th
-                                    v-for="(item,index) in keys"
-                                    v-bind:key="index"
-                                    class="text-center"
-                                  >
-                                    <span v-text="item"></span>
-                                    <hr />
-                                    <input
-                                      type="text"
-                                      class="input input-sm form-control"
-                                      v-model="filters[item]"
-                                      v-on:change="updVal = !updVal"
-                                    />
-                                  </th>
-                                  <th class="text-center"  colspan="2"><span class="mt-5" v-text="'Opciones'"></span><p></p></th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr
-                                  v-for="(item, index) in dataset"
-                                  v-bind:key="index"
-                                  :data-filtro="String(updVal)"
+                          <div class="col-12">
+                            <div class="row justify-content-center mt-2">
+                              <div class="col-2 mt-2 text-right">
+                                <button
+                                  class="btn btn-outline-success"
+                                  type="button"
+                                  v-on:click="getGeneralI()"
                                 >
-                                  <td
-                                    v-for="(key,index2) in keys"
-                                    v-html="item[index2]"
-                                    v-bind:key="index2"
-                                  ></td>
-                                  <td><button type="button" class="btn btn-outline-info"><i class="fa fa-edit"></i></button></td>
-                                  <td><button type="button" class="btn btn-outline-danger" @click="getGeneralD(item[0])"><i class="fa fa-trash"></i></button></td>
-                                </tr>
-                              </tbody>
-                            </table>
+                                  Guardar <i class="fa fa-save"></i>
+                                </button>
+                              </div>
+                              <div class="col-2 mt-2">
+                                <button
+                                  class="btn btn-outline-danger"
+                                  type="button"
+                                  v-on:click="cancelarCrear()"
+                                >
+                                  Cancelar <i class="fa fa-times"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-12">
+                            <hr />
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-12" v-else>
-                      <hr>
-                      <h4 class="text-center text-muted">
-                        Please choose a table to continue.
-                      </h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Nuevo Usuario -->
-      <section v-if="opcionActual == 'NuevoUsuario'">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="col-10 offset-1">
-                    <div class="row">
-                        <div class="col-12">
-                            <h3>Nuevo Usuario</h3>
-                        </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-6 mt-2">
-                          <input type="text" placeholder="Name" class="form-control" v-model="nUsuario.nombres">
-                      </div>
-                      <div class="col-6 mt-2">
-                        <input type="text" placeholder="Email" class="form-control" v-model="nUsuario.email">
-                    </div>
-                      <div class="col-4 mt-2">
-                          <input type="password" placeholder="Password" class="form-control" v-model="nUsuario.contraseña">
-                      </div>
-                      <div class="col-4 mt-2">
-                          <input type="password" placeholder="Password confirmation" class="form-control" v-model="nUsuario.confirmar_contraseña">
-                      </div>
-                      <div class="col-4 mt-2">
-                          <select name="select" style="width:100%; line-height: 1.3; padding: .6em 1.4em .5em .8em; -moz-appearance: none; -webkit-appearance: none; appearance: none;" v-model="nUsuario.tipo">
-                              <option value="-1" disabled selected>Tipo</option>
-                              <option value="Vendedor">Vendedor</option>
-                              <option value="Administrador">Administrador</option>
-                          </select>
-                      </div>
-                      <div class="col-12 mt-2 text-center">
-                          <hr>
-                          <button class="btn btn-success" @click="crearUsuario()">Guardar <i class="fas fa-save"></i></button>
-                          <button class="btn btn-danger" @click="cancelarNuevoUsuario()">Cancelar <i class="fas fa-times"></i></button>
-                      </div>
-                      <div class="col-12" >
-                          <hr>
-                          <div class="alert alert-warning text-center" role="alert" v-if="nUsuario.contraseña && nUsuario.confirmar_contraseña && nUsuario.contraseña != nUsuario.confirmar_contraseña">
-                            Las contraseñas proporcionadas no coinsiden.
-                          </div>
-                          <div class="alert alert-success text-center" v-if="msgUsuario">
-                            <span v-text="msgUsuario"></span> <span class="close" @click="msgUsuario = null">x</span>
-                          </div>
-                      </div>
-                  </div>
-                  <div cass="row">
-                    <div class="col-12">
-                        <h3>Usuario</h3>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="row" v-for="(item, index) in Usuarios">
-                        <div class="col-12">
-                          <hr>
-                          <div class="row">
-                            <div class="col-2 py-3 text-center">
-                              <i class="avatar bkg-grad-naranja" v-if="item.nombres" v-text="item.nombres.substring(0,1).toUpperCase()"></i>
-                              <i class="avatar bkg-grad-naranja fas fa-user" v-else></i>
-                            </div>
-                            <div class="col-3"> 
-                              <p class="pt-3" v-text="item.nombres"></p>
-                            </div>
-                            <div class="col-3"> 
-                              <p class="pt-3 pt-3"v-text="item.email"></p>
-                            </div>
-                            <div class="col-3"> 
-                              <p class="pt-3 pt-3"v-text="item.tipo"></p>
-                            </div>
-                            <div class="col-1"> 
-                              <button class="btn btn-danger mt-3" @click="eliminarUsuario(item)"><i class="fas fa-trash"></i></button>
+                      <div class="col-12" v-if="!fCrear && Tabla != -1">
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="table">
+                              <table id="repTB">
+                                <thead>
+                                  <tr>
+                                    <th
+                                      v-for="(item,index) in keys"
+                                      v-bind:key="index"
+                                      class="text-center"
+                                    >
+                                      <span v-text="item"></span>
+                                      <hr />
+                                      <input
+                                        type="text"
+                                        class="input input-sm form-control"
+                                        v-model="filters[item]"
+                                        v-on:change="updVal = !updVal"
+                                      />
+                                    </th>
+                                    <th class="text-center"  colspan="2"><span class="mt-5" v-text="'Opciones'"></span><p></p></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr
+                                    v-for="(item, index) in dataset"
+                                    v-bind:key="index"
+                                    :data-filtro="String(updVal)"
+                                  >
+                                    <td
+                                      v-for="(key,index2) in keys"
+                                      v-html="item[index2]"
+                                      v-bind:key="index2"
+                                    ></td>
+                                    <td><button type="button" class="btn btn-outline-info"><i class="fa fa-edit"></i></button></td>
+                                    <td><button type="button" class="btn btn-outline-danger" @click="getGeneralD(item[0])"><i class="fa fa-trash"></i></button></td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
                           </div>
                         </div>
+                      </div>
+                      <div class="col-12" v-else>
+                        <hr>
+                        <h4 class="text-center text-muted">
+                          Please choose a table to continue.
+                        </h4>
                       </div>
                     </div>
                   </div>
@@ -473,10 +390,94 @@
               </div>
             </div>
           </div>
-        </div>
-        
-      </section>
-
+        </section>
+        <!-- Nuevo Usuario -->
+        <section v-if="opcionActual == 'NuevoUsuario'">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="col-10 offset-1">
+                      <div class="row">
+                          <div class="col-12">
+                              <h3>Nuevo Usuario</h3>
+                          </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6 mt-2">
+                            <input type="text" placeholder="Name" class="form-control" v-model="nUsuario.nombres">
+                        </div>
+                        <div class="col-6 mt-2">
+                          <input type="text" placeholder="Email" class="form-control" v-model="nUsuario.email">
+                      </div>
+                        <div class="col-4 mt-2">
+                            <input type="password" placeholder="Password" class="form-control" v-model="nUsuario.contraseña">
+                        </div>
+                        <div class="col-4 mt-2">
+                            <input type="password" placeholder="Password confirmation" class="form-control" v-model="nUsuario.confirmar_contraseña">
+                        </div>
+                        <div class="col-4 mt-2">
+                            <select name="select" style="width:100%; line-height: 1.3; padding: .6em 1.4em .5em .8em; -moz-appearance: none; -webkit-appearance: none; appearance: none;" v-model="nUsuario.tipo">
+                                <option value="-1" disabled selected>Tipo</option>
+                                <option value="Vendedor">Vendedor</option>
+                                <option value="Administrador">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mt-2 text-center">
+                            <hr>
+                            <button class="btn btn-success" @click="crearUsuario()">Guardar <i class="fas fa-save"></i></button>
+                            <button class="btn btn-danger" @click="cancelarNuevoUsuario()">Cancelar <i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="col-12" >
+                            <hr>
+                            <div class="alert alert-warning text-center" role="alert" v-if="nUsuario.contraseña && nUsuario.confirmar_contraseña && nUsuario.contraseña != nUsuario.confirmar_contraseña">
+                              Las contraseñas proporcionadas no coinsiden.
+                            </div>
+                            <div class="alert alert-success text-center" v-if="msgUsuario">
+                              <span v-text="msgUsuario"></span> <span class="close" @click="msgUsuario = null">x</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div cass="row">
+                      <div class="col-12">
+                          <h3>Usuario</h3>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="row" v-for="(item, index) in Usuarios">
+                          <div class="col-12">
+                            <hr>
+                            <div class="row">
+                              <div class="col-2 py-3 text-center">
+                                <i class="avatar bkg-grad-naranja" v-if="item.nombres" v-text="item.nombres.substring(0,1).toUpperCase()"></i>
+                                <i class="avatar bkg-grad-naranja fas fa-user" v-else></i>
+                              </div>
+                              <div class="col-3"> 
+                                <p class="pt-3" v-text="item.nombres"></p>
+                              </div>
+                              <div class="col-3"> 
+                                <p class="pt-3 pt-3"v-text="item.email"></p>
+                              </div>
+                              <div class="col-3"> 
+                                <p class="pt-3 pt-3"v-text="item.tipo"></p>
+                              </div>
+                              <div class="col-1"> 
+                                <button class="btn btn-danger mt-3" @click="eliminarUsuario(item)"><i class="fas fa-trash"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+      </div>
       <div style="display: none;">
         <div class="modal-backdrop fade show"></div>
             <div tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" class="modal fade show" style="padding-right: 17px; display: block;" aria-modal="true">
