@@ -1,5 +1,5 @@
 Vue.component('combo-tabla', {
-    props: ['tabla', 'campo', 'usr', 'local', 'valor'],
+    props: ['tabla', 'campo', 'usr', 'local', 'valor', 'au'],
     data: function () {
       return {
         dataset: [],
@@ -30,12 +30,12 @@ Vue.component('combo-tabla', {
                     if (response.data) {
                         if(response.data.msg){
                             this.dataset = []
-
+                            let aux = this.au == null ? 1 : this.au;
                             if(this.local == 0){
                                 this.dataset = response.data.msg
                             }else{
                                 for(let i = 0; i < response.data.msg.length; i++){
-                                    if(response.data.msg[i][1] == 1){
+                                    if(response.data.msg[i][aux] == 1){
                                         this.dataset.push(response.data.msg[i])
                                     }
                                 }

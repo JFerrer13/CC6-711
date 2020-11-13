@@ -128,8 +128,7 @@ var app = new Vue({
     camposR:"-CREATED_AT-CREATED_BY-UPDATE_AT-UPDATE_BY-",
     nuevoProducto: 0,
     branch_selected: '',
-
-    tmp_producto: [6, 1, 4, "Carne de Toro", "CAR_RES_002", 0, 0, 0, 0, 0, "00/00/0000 0:00:00", "2020-11-09 22:05:17", "09/11/2020 22:05:17", "JavierFerrer@galileo.edu"]
+    tmp_producto:[]
   },
   methods: {
     //Funciones Aleatorias, sin agrupación lógica
@@ -482,23 +481,28 @@ var app = new Vue({
       pair = pair.split(/\s*=\s*/)
       this.Usuario[pair[0]] = pair.splice(1).join('=')
     })
+    this.Usuario = {
+      Email: "JavierFerrer@galileo.edu",
+      Nombre: "Javier Ferrer",
+      Puesto: "DBA",
+    }
   },
   updated() { },
   beforeCreate() {
-    if(document.cookie){
-      let aux = {}
+    // if(document.cookie){
+    //   let aux = {}
         
-      document.cookie.split(/\s*;\s*/).forEach(function(pair) {
-        pair = pair.split(/\s*=\s*/)
-        aux[pair[0]] = pair.splice(1).join('=')
-      })
+    //   document.cookie.split(/\s*;\s*/).forEach(function(pair) {
+    //     pair = pair.split(/\s*=\s*/)
+    //     aux[pair[0]] = pair.splice(1).join('=')
+    //   })
 
-      if(!aux.Email){
-        window.open("login.html", "_self");
-      }
-    }
-    else{
-      window.open("login.html", "_self");
-    }
+    //   if(!aux.Email){
+    //     window.open("login.html", "_self");
+    //   }
+    // }
+    // else{
+    //   window.open("login.html", "_self");
+    // }
   },
 });
