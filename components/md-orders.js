@@ -16,11 +16,11 @@ Vue.component('md-orders', {
                     <div class="col-12"><hr></div>
                     <div clasS="col-1"><strong>#</strong></div>
                     <div clasS="col-2"><strong>Date</strong></div>
-                    <div clasS="col-3"><strong>Product</strong></div>
-                    <div clasS="col-1"><strong>UP</strong></div>
+                    <div clasS="col-2"><strong>Product</strong></div>
                     <div clasS="col-1"><strong>RQ</strong></div>
                     <div clasS="col-1"><strong>MQ</strong></div>
-                    <div clasS="col-1"><strong>TP</strong></div>
+                    <div clasS="col-2"><strong>UP</strong></div>
+                    <div clasS="col-2"><strong>TP</strong></div>
                     <div clasS="col-1"><strong></strong></div>
                     <div class="col-12"><hr></div>
                 </div>
@@ -29,16 +29,21 @@ Vue.component('md-orders', {
                 <div class="row justify-content-center text-center pt-4" v-for="(item,index) in ordersFiltered" >
                     <div clasS="col-1" v-text="index + 1"></div>
                     <div clasS="col-2" v-text="item[12]"></div>
-                    <div clasS="col-3 text-left" >
+                    <div clasS="col-2 text-left" >
+                        <span v-text="item[5]"></span>
+
+                        <span v-if="item[7] == 'PENDING'" class="badge badge-warning" v-text="item[6]"></span>
+                        <span v-if="item[7] == 'REJECTED'" class="badge badge-danger" v-text="item[6]"></span>
+                        <span v-if="item[7] == 'APPROVED'" class="badge badge-success" v-text="item[6]"></span>
+
                         <span v-if="item[7] == 'PENDING'" class="badge badge-warning" v-text="item[7]"></span>
                         <span v-if="item[7] == 'REJECTED'" class="badge badge-danger" v-text="item[7]"></span>
                         <span v-if="item[7] == 'APPROVED'" class="badge badge-success" v-text="item[7]"></span>
-                        <span v-text="item[5]"></span>
                     </div>
-                    <div clasS="col-1" v-text="item[8]"></div>
                     <div clasS="col-1" v-text="item[9]"></div>
                     <div clasS="col-1" v-text="item[10]"></div>
-                    <div clasS="col-1" v-text="item[11]"></div>
+                    <div clasS="col-2" v-text="formatMoney(item[8])"></div>
+                    <div clasS="col-2" v-text="formatMoney(item[11])"></div>
                     <div clasS="col-1">
                         <div class="dropdown">
                             <button type="button" class="btn btn-light dropdown-toggle" :id="'dropdownMenuButton' + index" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -210,6 +215,25 @@ Vue.component('md-orders', {
         convertDecStr(n){
             n = String(n)
             return n.length - n.indexOf('.') > 2 ? n.substring(0, n.indexOf('.') + 3) : n
+        },
+        formatMoney(amount) {
+            try {
+              let decimalCount = 2
+              let decimal = "."
+              thousands = ","
+          
+              decimalCount = Math.abs(decimalCount);
+              decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+          
+              const negativeSign = amount < 0 ? "-" : "";
+          
+              let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+              let j = (i.length > 3) ? i.length % 3 : 0;
+          
+              return "Q. " + negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+            } catch (e) {
+              console.log(e)
+            }
         }
     },
     computed:{

@@ -17,7 +17,7 @@ Vue.component('md-sales', {
                     <div clasS="col-1"><strong>#</strong></div>
                     <div clasS="col-2"><strong>Date</strong></div>
                     <div clasS="col-4"><strong>Product</strong></div>
-                    <div clasS="col-1"><strong>Quantity</strong></div>
+                    <div clasS="col-1"><strong>Qty.</strong></div>
                     <div clasS="col-1"><strong>Total</strong></div>
                     <div class="col-12"><hr></div>
                 </div>

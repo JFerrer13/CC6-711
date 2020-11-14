@@ -1,5 +1,5 @@
 Vue.component('combo-tabla', {
-    props: ['tabla', 'campo', 'usr', 'local', 'valor', 'au'],
+    props: ['tabla', 'campo', 'usr', 'local', 'valor', 'initial', 'dsbl', 'au'],
     data: function () {
       return {
         dataset: [],
@@ -8,7 +8,7 @@ Vue.component('combo-tabla', {
     },
     template: `
         <div name="combo-tabla">
-            <select class="custom-select" v-if="dataset.length" v-model="selected">
+            <select class="custom-select" v-if="dataset.length" v-model="selected" :disabled="dsbl">
                 <option selected value="">Select...</option>
                 <option v-for="(item, index) in dataset" :key="index" :value="index" v-text="item[0] + ' - ' + item[campo]"></option>
             </select>
@@ -40,7 +40,10 @@ Vue.component('combo-tabla', {
                                     }
                                 }
                             }
-                            console.log(this.dataset)
+                            
+                            if(initial){
+                                this.selected = initial
+                            }
                         }
                     } else {
                     alert("algo salio mal al generar el combo");
@@ -70,7 +73,12 @@ Vue.component('combo-tabla', {
     watch: {
         selected: {
             handler: function() {
-              this.$emit('value', [this.dataset[this.selected][this.valor], this.dataset[this.selected][0] + ' - ' + this.dataset[this.selected][this.campo]]);
+                if(this.selected !== ''){
+                    console.log([this.dataset[this.selected][this.valor], this.dataset[this.selected][0] + ' - ' + this.dataset[this.selected][this.campo]])
+                    this.$emit('value', [this.dataset[this.selected][this.valor], this.dataset[this.selected][0] + ' - ' + this.dataset[this.selected][this.campo]]);
+                }else{
+                    this.$emit('value', [null,null]);
+                }
           },
             deep: true
         },

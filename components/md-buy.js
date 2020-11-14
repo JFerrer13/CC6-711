@@ -25,7 +25,7 @@ Vue.component('md-buy', {
                     <div class="row">
                         <div class="col-6">
                         <label>Branch</label>
-                        <input type="text" class="form-control" :value="producto[2]" disabled>
+                        <combo-tabla tabla="distributor_branches" campo="2" valor="0" :usr="usr" local="1" :initial="producto[2]" :dsbl="true"></combo-tabla>
                         </div>
                         <div class="col-6">
                         <label>Provider</label>
@@ -191,6 +191,16 @@ Vue.component('md-buy', {
                 alert('There are not enough product available to execute this operation.')
                 return 0
             }
+            if(0 >this.quantity){
+                alert('We cannot sell the amount you specified(' + this.quantity + '), please check it before continuing.')
+                return 0
+            }
+
+            if(0 == this.quantity){
+                alert('We cannot accomplish the sell by the amount specified(' + this.quantity + '), please check it before continuing.')
+                return 0
+            }
+
 
             let data = {
                 id: "null",
@@ -232,7 +242,7 @@ Vue.component('md-buy', {
                 "distributor_manufacturer_id": this.convertDecStr(this.producto[3]),
                 "product_name": this.producto[4],
                 "product_code": this.producto[5],
-                "minimun_stock_quantity": this.convertDecStr(this.producto[6]),
+                "minimun_stock_quantity": this.convertDecStr(Math.floor(Math.random() * 10) + 5),
                 "available_quantity": this.convertDecStr(this.producto[7] - this.quantity),
                 "unit_price": this.convertDecStr(this.producto[8]),
                 "wholesale_price": this.convertDecStr(this.producto[9]),

@@ -111,7 +111,7 @@
                         placeholder="Product, dsitributor or order "
                         v-model="aBuscar"
                       />
-                      <combo-tabla tabla="distributor_branches" campo="2" valor="0" :usr="Usuario.Email" local="1" @value="branch_selected = $event[1].split('-')[0].trim()"></combo-tabla>
+                      <combo-tabla tabla="distributor_branches" campo="2" valor="0" :usr="Usuario.Email" local="1" @value="branch_selected =  $event[1] ? $event[1].split('-')[0].trim() : ''"></combo-tabla>
                       <div class="input-group-prepend">
                         <button
                           class="btn btn-success"

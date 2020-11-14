@@ -23,12 +23,11 @@ Vue.component('inventario', {
                             </div>
                             <div class="col-12">
                                 <div role="alert" class="alert alert-secondary mb-1">
-                                <p><strong>Leyenda: </strong> 
+                                <p><strong>Caption: </strong> 
                                     <span class="text-info">MQ</span> - MINIMUN_STOCK_QUANTITY, 
                                     <span class="text-info">AQ</span> - AVAILABLE_QUANTITY, 
                                     <span class="text-info">UP</span> - UNIT_PRICE, 
                                     <span class="text-info">WP</span> - WHOLESALE_PRICE, 
-                                    <span class="text-info">WQ</span> - WHOLESALE_QUANTITY_REQUIRED
                                 </p>
                                 </div>
                             </div>
@@ -42,7 +41,6 @@ Vue.component('inventario', {
                                     <div clasS="col-1"><strong>AQ</strong></div>
                                     <div clasS="col-1"><strong>UP</strong></div>
                                     <div clasS="col-1"><strong>WP</strong></div>
-                                    <div clasS="col-1"><strong>WQ</strong></div>
                                     <div clasS="col-1"><strong></strong></div>
                                     <div class="col-12"><hr></div>
                                 </div>
@@ -57,9 +55,8 @@ Vue.component('inventario', {
                                     <span v-text="item[4]"></span></div>
                                     <div clasS="col-1" v-text="item[6]"></div>
                                     <div clasS="col-1" v-text="item[7]"></div>
-                                    <div clasS="col-1" v-text="item[8]"></div>
-                                    <div clasS="col-1" v-text="item[9]"></div>
-                                    <div clasS="col-1" v-text="item[10]"></div>
+                                    <div clasS="col-1" v-text="formatMoney(item[8])"></div>
+                                    <div clasS="col-1" v-text="formatMoney(item[9])"></div>
                                     <div clasS="col-1">
                                         <div class="dropdown">
                                             <button type="button" class="btn btn-light dropdown-toggle" :id="'dropdownMenuButton' + index" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -155,14 +152,33 @@ Vue.component('inventario', {
         },
         closeMd(){
             this.option = ''
+        },
+        formatMoney(amount) {
+            try {
+              let decimalCount = 2
+              let decimal = "."
+              thousands = ","
+          
+              decimalCount = Math.abs(decimalCount);
+              decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+          
+              const negativeSign = amount < 0 ? "-" : "";
+          
+              let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+              let j = (i.length > 3) ? i.length % 3 : 0;
+          
+              return "Q. " + negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+            } catch (e) {
+              console.log(e)
+            }
         }
     },
     computed:{
         productFiltered(){
             return this.avaliable_branch_products.filter(row => {
             const branch = row[2].toString().toLowerCase();
-            const product = row[3].toString().toLowerCase();
-                
+            const product = row[4].toString().toLowerCase();
+            
             if(this.branch){
                 return branch.includes(this.branch) &&
                 product.includes(this.search);
