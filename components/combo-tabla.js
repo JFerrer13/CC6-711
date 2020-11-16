@@ -37,13 +37,17 @@ Vue.component('combo-tabla', {
                                 for(let i = 0; i < response.data.msg.length; i++){
                                     if(response.data.msg[i][aux] == 1){
                                         this.dataset.push(response.data.msg[i])
+                                    }else if(this.au == -1){
+                                        this.dataset.push(response.data.msg[i])
+                                    }
+                                    if(this.initial !== ''){
+                                        if(this.initial == response.data.msg[i][this.valor]){
+                                            this.selected = i
+                                        }
                                     }
                                 }
                             }
                             
-                            if(initial){
-                                this.selected = initial
-                            }
                         }
                     } else {
                     alert("algo salio mal al generar el combo");

@@ -10,7 +10,8 @@ Vue.component('payments', {
         hora: '',
         minuto:'',
         segundo: '',
-        manufacturers: []
+        manufacturer: [],
+        syncDone:0, 
       }
     },
     template: `
@@ -22,12 +23,32 @@ Vue.component('payments', {
                         <div class="col-6">
                         <h2>Payment</h2>
                         <p class="text-muted">the distributed part of the database we implement.</p>
-                        <hr />
-                        <p>
+                        <hr style="display:none"/>
+                        <p style="display:none">
                             <strong>Query for the date:</strong> 
                             <span v-text="this.obtenerfecha" v-if="this.obtenerfecha != '' "></span>
                             <span v-else> No date selected yet.</span>
                         </p>
+                        <hr>
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="mt-1"><strong >Sync by distributor</strong></p>
+                            </div>
+                            <div class="col-8">
+                                <div class="input-group">
+                                    <combo-tabla tabla="distributors" campo="1" valor="2" :usr="usr" local="1" @value="manufacturer = $event" au="-1" initial="https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/"></combo-tabla>
+                                    <div class="input-group-prepend">
+                                        <button
+                                            class="btn btn-success"
+                                            style="width: 100%"
+                                            @click="syncOrderAll()"
+                                        >
+                                            <i class="fas fa-sync"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                         <div class="col-6">
                         <h6>You can choose what date you want to query from: </h6>
@@ -76,16 +97,13 @@ Vue.component('payments', {
                                     </select>                            
                                 </div> 
                                 <div class="col-12"><hr class="my-2"></div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <button type="button" class="btn btn-info" v-on:click="obtenerPayments()" style="width:100%;"><i class="fas fa-arrow-down"></i></button>                           
                                 </div>
-                                <div class="col-2">
-                                    <button type="button" class="btn btn-success" v-on:click="syncPayment()" style="width:100%;"><i class="fas fa-sync"></i></button>                           
-                                </div>
-                                <div class="col-2">
+                                <div class="col-3">
                                     <button type="button" class="btn btn-outline-secondary" v-on:click="clearDate()" style="width:100%;"><i class="fas fa-trash-alt"></i></button>                           
                                 </div> 
-                                <div class="col-2">
+                                <div class="col-3">
                                     <button type="button" class="btn btn-outline-secondary" v-on:click="setToday()" style="width:100%;"><i class="fas fa-calendar-times"></i></button>                           
                                 </div>                       
                             </div>
@@ -103,7 +121,7 @@ Vue.component('payments', {
                                 <div class="col-1"><strong><i class="fas fa-clipboard-list"></i></strong></div>
                                 <div class="col-12"><hr></div>
                             </div>
-                            <div class="row text-center" v-for="(item,index) in payments">
+                            <div class="row text-center mt-2" v-for="(item,index) in payments">
                                 <div class="col-1" v-text="index + 1"></div>
                                 <div class="col-2" v-text="item.debtor_slug"></div>
                                 <div class="col-2" v-text="item.creditor_slug"></div>
@@ -136,7 +154,7 @@ Vue.component('payments', {
     `,
     methods: {
         obtenerPayments(){
-            let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/debts-to-pay?date_from='
+            let url = this.manufacturer[0] + 'debts-to-pay?date_from='
             let date = this.obtenerfecha
             
             if(date){
@@ -148,6 +166,7 @@ Vue.component('payments', {
               .then((response) => {
                 if (response.status == 200) {
                   if (response.data) {
+                    this.payments  = []
                     this.payments = response.data
                   } else {
                     alert("Algo salio mal al traer los payments");
@@ -276,23 +295,19 @@ Vue.component('payments', {
                 this.msg = "Algo salio mal al generar el combo";
                 });
         },
-        syncOrder(obj){
-            let man = ''
-
-            for(let i = 0; i < this.manufacturers.length; i++ ){
-                if(obj.manufacturer == this.manufacturers[i][0] ){
-                    man = this.manufacturers[i][4]
-                    break;
-                }
-            }
-
-            let url = man + 'account-receivable/new-payment'
+        syncPayment(obj){
+            let url ='https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/debts-to-pay/sync-debt'
 
             let data = {
-                "account_receivable_id": 5,
-                "account_receivable_owner": "unique_owner_slug",
-                "total": 560.5
-            }
+                "id": obj.id,
+                "account_receivable_id": obj.account_receivable_id,
+                "creditor_slug": obj.creditor_slug,
+                "debtor_slug": obj.debtor_slug,
+                "total": obj.total,
+                "status": obj.status,
+                "orders": obj.orders,
+                "last_updated": obj.last_updated
+              }
 
             axios
                 .put(url, data)
@@ -300,17 +315,24 @@ Vue.component('payments', {
                 if (response.status == 200) {
                     if (response.data) {
                         if(response.data.msg){
-
-                            alert("The order has been payd successfully")
+                            this.syncDone++
                         }
                     } else {
-                    alert("algo salio mal al generar el combo");
+                        alert("An erro while trying to sync payment debts.");
                     }
                 }
                 })
                 .catch((err) => {
                 this.msg = "Algo salio mal al generar el combo";
                 });
+        },
+        syncOrderAll(){
+            this.syncDone = 0
+
+            for(let i = 0; i < this.payments.length; i++){
+                let obj = this.payments[i]
+                this.syncPayment(obj)
+            }
         },
         crearParametrosAxios(params){
             var data = new FormData();
@@ -337,14 +359,13 @@ Vue.component('payments', {
         }
     },
     mounted () {
-        this.obtenerPayments()
         this.getManufacturers()
     },
     watch: {
-        selected: {
+        manufacturer: {
             handler: function() {
-                this.$emit('value', this.selected)
-          },
+                this.obtenerPayments()
+            },
             deep: true
         }
       }
