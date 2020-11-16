@@ -354,6 +354,9 @@ var app = new Vue({
       this.opcionActual = "Search";
       this.getTables();
     },
+    goToPayment(){
+      this.opcionActual = "Payment"
+    },
     //Usuarios
     obtenerUsuarios: function (){
       let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/usuarios'
@@ -445,6 +448,7 @@ var app = new Vue({
         tipo: -1,
       }
     },
+    
   },
   computed: {
     datosFiltrados() {

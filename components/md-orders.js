@@ -4,6 +4,7 @@ Vue.component('md-orders', {
     data: function () {
       return {
         orders: [],
+        manufacturers: []
       }
     },
     template: `
@@ -85,7 +86,16 @@ Vue.component('md-orders', {
                 });
         },
         Confirm(item){
-            let url = 'http://ec2-3-137-137-50.us-east-2.compute.amazonaws.com/api/order/' + item[1] + '/accept-reject'
+            let man = ''
+
+            for(let i = 0; i < this.manufacturers.length; i++ ){
+                if(this.producto[3] == this.manufacturers[i][0] ){
+                    man = this.manufacturers[i][4]
+                    break;
+                }
+            }
+
+            let url = man + 'order/' + item[1] + '/accept-reject'
 
             let data = 
             {
@@ -112,7 +122,16 @@ Vue.component('md-orders', {
                 });
         },
         Reject(item){
-            let url = 'http://ec2-3-137-137-50.us-east-2.compute.amazonaws.com/api/order/' + item[1] + '/accept-reject'
+            let man = ''
+
+            for(let i = 0; i < this.manufacturers.length; i++ ){
+                if(this.producto[3] == this.manufacturers[i][0] ){
+                    man = this.manufacturers[i][4]
+                    break;
+                }
+            }
+
+            let url = man + 'order/' + item[1] + '/accept-reject'
 
             let data = 
             {
@@ -186,7 +205,7 @@ Vue.component('md-orders', {
                 "distributor_manufacturer_id": this.convertDecStr(this.producto[3]),
                 "product_name": this.producto[4],
                 "product_code": this.producto[5],
-                "minimun_stock_quantity": this.convertDecStr(this.producto[6] + item[9]),
+                "minimun_stock_quantity": this.convertDecStr(Math.floor(Math.random() * 10) + 5),
                 "available_quantity": this.convertDecStr(this.producto[7] + item[9]),
                 "unit_price": this.convertDecStr(item[8]),
                 "wholesale_price": this.convertDecStr(item[8] + item[8]* 0.1),
@@ -212,9 +231,24 @@ Vue.component('md-orders', {
                 });
 
         },
-        convertDecStr(n){
-            n = String(n)
-            return n.length - n.indexOf('.') > 2 ? n.substring(0, n.indexOf('.') + 3) : n
+        convertDecStr(amount){
+            try {
+                let decimalCount = 2
+                let decimal = "."
+                thousands = ""
+            
+                decimalCount = Math.abs(decimalCount);
+                decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+            
+                const negativeSign = amount < 0 ? "-" : "";
+            
+                let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+                let j = (i.length > 3) ? i.length % 3 : 0;
+            
+                return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+              } catch (e) {
+                console.log(e)
+              }
         },
         formatMoney(amount) {
             try {
@@ -234,7 +268,33 @@ Vue.component('md-orders', {
             } catch (e) {
               console.log(e)
             }
-        }
+        },
+        getManufacturers(){
+            let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-manufacturers'
+        
+            let data = { 
+                "usr": this.usr,
+                "o": "s"
+            }
+        
+            axios
+                .put(url, data)
+                .then((response) => {
+                if (response.status == 200) {
+                    if (response.data) {
+                        if(response.data.msg){
+                            this.dataset = []
+                            this.manufacturers = response.data.msg
+                        }
+                    } else {
+                    alert("algo salio mal al generar el combo");
+                    }
+                }
+                })
+                .catch((err) => {
+                this.msg = "Algo salio mal al generar el combo";
+                });
+        },
     },
     computed:{
         ordersFiltered(){
@@ -250,6 +310,7 @@ Vue.component('md-orders', {
     },
     mounted () {
         this.obtenerBranchesProducts()
+        this.getManufacturers()
     },
     watch: {
         upd: {

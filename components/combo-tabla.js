@@ -53,7 +53,7 @@ Vue.component('combo-tabla', {
                 .catch((err) => {
                 this.msg = "Algo salio mal al generar el combo";
                 });
-            console.log(data)
+            
         },
     },
     computed:{

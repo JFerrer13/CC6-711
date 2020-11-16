@@ -69,8 +69,15 @@ Vue.component('nuevo-producto', {
         obtenerProductos () {
             let url = this.manufacturer_selected + 'products'
         
-            axios
-                .get(url)
+            axios({
+                    method: 'get',
+                    headers: { 
+                        "access-control-allow-origin": "*",
+                        "content-length": 257,
+                        "content-type":"application/json"
+                    },
+                    url: url
+                })
                 .then((response) => {
                     if (response.data) {
                         this.available_products = []

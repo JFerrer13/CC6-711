@@ -74,6 +74,11 @@
             >
               <a class="nav-link" v-if="Usuario.Puesto == 'DBA'" href="#" @click="goToTables()">Tables</a>
             </li>
+            <li
+              :class="'nav-item ' + ( opcionActual == 'Tables' ? 'active' : '')"
+            >
+              <a class="nav-link" v-if="Usuario.Puesto == 'DBA'" href="#" @click="goToPayment()">Payment</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="#" @click="cerrarSesion()">Logout</a>
             </li>
@@ -477,6 +482,10 @@
           </div>
           
         </section>
+        <!-- Payment -->
+        <section v-if="opcionActual == 'Payment'">
+            <payments :usr="Usuario.Email"></payments>    
+        </section>
       </div>
       <div style="display: none;">
         <div class="modal-backdrop fade show"></div>
@@ -532,12 +541,9 @@
                     </div>
                 </div>
             </div>
-        </div>
       </div>
-
+      </div>
     </div>
-
-      
 
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="script/vue.js"></script>
@@ -553,6 +559,7 @@
     <script src="components/md-buy.js"></script>
     <script src="components/md-orders.js"></script>
     <script src="components/md-sales.js"></script>
+    <script src="components/payments.js"></script>
     <!-- El script -->
     <script src="script/scripts.js"></script>
   </body>

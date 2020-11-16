@@ -7,6 +7,7 @@ Vue.component('md-buy', {
         quantity: 0,
         updOrders: false,
         updSales: false,
+        manufacturers: [],
       }
     },
     template: `
@@ -113,13 +114,22 @@ Vue.component('md-buy', {
     `,
     methods: {
         generateOrder: function () {
-            let url = 'http://ec2-3-137-137-50.us-east-2.compute.amazonaws.com/api/order'
-        
+            let man = ''
+
+            for(let i = 0; i < this.manufacturers.length; i++ ){
+                if(this.producto[3] == this.manufacturers[i][0] ){
+                    man = this.manufacturers[i][4]
+                    break;
+                }
+            }
+
+            let url = man + 'order'
+            
             let data = {
                 "required_quantity": this.quantity,
                 "product_code": this.producto[5],
                 "client_type": "distributor",
-                "client_slug": "distributor-ferrer"
+                "client_slug": "distributor-javier"
             }
         
             axios
@@ -152,8 +162,8 @@ Vue.component('md-buy', {
                 "product_code": String(order.product_code),
                 "required_quantity": String(order.required_quantity),
                 "status": String(order.status),
-                "total_price_quantity": this.convertDecStr(order.total_price),
-                "unit_price": this.convertDecStr(order.unit_price),
+                "total_price_quantity": this.formatMoney(order.total_price),
+                "unit_price": this.formatMoney(order.unit_price),
                 "usr": this.usr,
                 "o": "c"
             }
@@ -180,10 +190,6 @@ Vue.component('md-buy', {
                 });
 
         },
-        convertDecStr(n){
-            n = String(n)
-            return n.length - n.indexOf('.') > 2 ? n.substring(0, n.indexOf('.') + 3) : n
-        },
         generateSell (){
             let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-branch-dally-sales'
             
@@ -208,7 +214,7 @@ Vue.component('md-buy', {
                 distributor_branch_id: String(this.producto[2]),
                 product_code: String(this.producto[5]),
                 quantity_sale: String(this.quantity),
-                total_sale: this.convertDecStr(this.quantity * this.producto[8]),
+                total_sale: this.formatMoney(this.quantity * this.producto[8]),
                 usr: "JavierFerrer@galileo.edu",
                 o: "c",
             }
@@ -236,17 +242,17 @@ Vue.component('md-buy', {
             let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-branch-products'
 
             let data = {
-                "id": this.convertDecStr(this.producto[0]),
-                "distributor_id": this.convertDecStr(this.producto[1]),
-                "distributor_branch_id": this.convertDecStr(this.producto[2]),
-                "distributor_manufacturer_id": this.convertDecStr(this.producto[3]),
+                "id": this.formatMoney(this.producto[0]),
+                "distributor_id": this.formatMoney(this.producto[1]),
+                "distributor_branch_id": this.formatMoney(this.producto[2]),
+                "distributor_manufacturer_id": this.formatMoney(this.producto[3]),
                 "product_name": this.producto[4],
                 "product_code": this.producto[5],
-                "minimun_stock_quantity": this.convertDecStr(Math.floor(Math.random() * 10) + 5),
-                "available_quantity": this.convertDecStr(this.producto[7] - this.quantity),
-                "unit_price": this.convertDecStr(this.producto[8]),
-                "wholesale_price": this.convertDecStr(this.producto[9]),
-                "wholesale_quantity_required": this.convertDecStr(this.producto[10]),
+                "minimun_stock_quantity": this.formatMoney(Math.floor(Math.random() * 10) + 5),
+                "available_quantity": this.formatMoney(this.producto[7] - this.quantity),
+                "unit_price": this.formatMoney(this.producto[8]),
+                "wholesale_price": this.formatMoney(this.producto[9]),
+                "wholesale_quantity_required": this.formatMoney(this.producto[10]),
                 "usr": this.usr,
                 "o": "u"
             }
@@ -270,15 +276,56 @@ Vue.component('md-buy', {
                 });
 
         },
-        convertDecStr(n){
-            n = String(n)
-            return n.length - n.indexOf('.') > 2 ? n.substring(0, n.indexOf('.') + 3) : n
+        getManufacturers(){
+            let url = 'https://oinrxmol9f.execute-api.us-east-2.amazonaws.com/main/distributor-manufacturers'
+        
+            let data = { 
+                "usr": this.usr,
+                "o": "s"
+            }
+        
+            axios
+                .put(url, data)
+                .then((response) => {
+                if (response.status == 200) {
+                    if (response.data) {
+                        if(response.data.msg){
+                            this.dataset = []
+                            this.manufacturers = response.data.msg
+                        }
+                    } else {
+                    alert("algo salio mal al generar el combo");
+                    }
+                }
+                })
+                .catch((err) => {
+                this.msg = "Algo salio mal al generar el combo";
+                });
+        },
+        formatMoney(amount) {
+            try {
+              let decimalCount = 2
+              let decimal = "."
+              thousands = ""
+          
+              decimalCount = Math.abs(decimalCount);
+              decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+          
+              const negativeSign = amount < 0 ? "-" : "";
+          
+              let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+              let j = (i.length > 3) ? i.length % 3 : 0;
+          
+              return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+            } catch (e) {
+              console.log(e)
+            }
         }
     },
     computed:{
     },
     mounted () {
-
+        this.getManufacturers()
     },
     watch: {
         selected: {
